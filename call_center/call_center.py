@@ -8,7 +8,7 @@ class Rank(Enum):
     DIRECTOR = 2
 
 
-class Employer(metaclass=ABCMeta):
+class Employee(metaclass=ABCMeta):
     def __init__(self, employee_id, name, rank, call_center):
         self.employee_id = employee_id
         self.name = name
@@ -37,6 +37,13 @@ class Employer(metaclass=ABCMeta):
         self.call_center.notify_call_completed(call)
 
 
+class Operator(Employee):
+    def __init__(self, employee_id, name):
+        super(Operator, self).__init__(employee_id, name, Rank.OPERATOR)
+
+    def escalate_call(self):
+        self.call.level = Rank.DIRECTOR
+        self._escalate_call()
 
 
 class CallState(Enum):
