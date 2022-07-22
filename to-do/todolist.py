@@ -60,6 +60,13 @@ class TodoList:
             return True
         else:
             return False
+
+    def remove(self, item_id):
+        for todo in self.list:
+            if todo.id == item_id:
+                self.list.remove(todo)
+        raise IndexError("No such item")
+
     def load(self):
         """
         Load the list data from file
