@@ -48,12 +48,18 @@ class TodoList:
             item = self.list[current_item]
             current_item += 1
             yield item
+
     def __getitem__(self, item_id):
         for todo in self.list:
             if todo.id == item_id:
                 return todo
         raise IndexError("No such item")
 
+    def __contains__(self, item):
+        if item in self.list:
+            return True
+        else:
+            return False
     def load(self):
         """
         Load the list data from file
