@@ -12,6 +12,16 @@ class TodoList:
         self.json_location = json_location
         self.load()
 
+    def add(self, text):
+        try:
+            last_id = self.list[-1].id
+        except IndexError:
+            last_id = -1
+
+        new_item = TodoItem(last_id, text)
+        self.list.append(new_item)
+        return new_item
+
     def load(self):
         """
         Load the list data from file
@@ -23,10 +33,10 @@ class TodoList:
             json_list = json.loads(json_text)
             self.list = []
             for item in json_list:
-                self.list.append(TodoItem(item['id'],item['text']))
+                self.list.append(TodoItem(item['id'], item['text']))
                 print(item)
         except IOError:
-            raise
+            raise NoSuchListError
 
 
 class TodoItem:
