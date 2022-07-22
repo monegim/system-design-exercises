@@ -22,6 +22,13 @@ class TodoList:
         self.list.append(new_item)
         return new_item
 
+    def __str__(self):
+        string_list = []
+        for item in self.list:
+            string_list.append(str(item.id) + '\t' + str(item.text))
+        string = '\n'.join(string_list)
+        return string
+
     def load(self):
         """
         Load the list data from file
