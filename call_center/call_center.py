@@ -77,3 +77,6 @@ class Call(object):
         self.rank = rank
         self.employee = None
 
+class CallCenter:
+    def __init__(self, operators):
+        self.operators = operators
