@@ -29,6 +29,13 @@ class TodoList:
         string = '\n'.join(string_list)
         return string
 
+    def id_less_string(self):
+        string = ''
+        for item in self.list:
+            string = string + str(item.text) + '\n'
+        string = string[:-1]
+        return string
+
     def load(self):
         """
         Load the list data from file
