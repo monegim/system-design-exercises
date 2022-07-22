@@ -36,6 +36,19 @@ class TodoList:
         string = string[:-1]
         return string
 
+    def __len__(self):
+        return len(self.list)
+
+    def __iter__(self):
+        return self.forward()
+
+    def forward(self):
+        current_item = 0
+        while current_item < len(self):
+            item = self.list[current_item]
+            current_item += 1
+            yield item
+
     def load(self):
         """
         Load the list data from file
