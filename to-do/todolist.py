@@ -83,6 +83,9 @@ class TodoList:
         except IOError:
             raise NoSuchListError
 
+    def save(self):
+        pass
+
 
 class TodoItem:
     def __init__(self, id: int, text: str):
