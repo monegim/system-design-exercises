@@ -26,6 +26,13 @@ class TodoListTests(unittest.TestCase):
         self.todolist = todolist.TodoList("./todo.json")
         self.list = json.loads(self.testdata_text)
 
+    def get_data_file_as_string(self):
+        with open("./todo.json", "r") as f:
+            string = self.testdata_text = f.read()
+        return string
+
     def test_save(self):
         self.create_todolist_and_safe_list()
         self.todolist.save()
+        newfile_text = self.get_data_file_as_string()
+        self.assertEqual(newfile_text, self.testdata_text)
