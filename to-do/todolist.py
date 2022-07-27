@@ -79,7 +79,7 @@ class TodoList:
             self.list = []
             for item in json_list:
                 self.list.append(TodoItem(item['id'], item['text']))
-                print(item)
+                # print(item)
         except IOError:
             raise NoSuchListError
 

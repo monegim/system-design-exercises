@@ -36,3 +36,8 @@ class TodoListTests(unittest.TestCase):
         self.todolist.save()
         newfile_text = self.get_data_file_as_string()
         self.assertEqual(newfile_text, self.testdata_text)
+
+    def test_contains(self):
+        self.create_todolist_and_safe_list()
+        print(self.todolist)
+        self.assertTrue({"id": 1, "text": "Wash the dishes"} in self.todolist)
