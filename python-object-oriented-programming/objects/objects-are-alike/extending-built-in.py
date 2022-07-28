@@ -21,4 +21,4 @@ class Contact:
         return (
         f"{self.__class__.__name__}("
         f"{self.name!r}, {self.email!r}" f")"
-)
+        )
