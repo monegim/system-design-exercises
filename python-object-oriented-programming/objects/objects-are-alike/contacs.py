@@ -16,5 +16,12 @@ class Contact:
             f")"
         )
 
+class Supplier(Contact):
+    def order(self, order: "Order") -> None:
+        print(
+            "If this were a real system we could send "
+            f"'{order}' order to '{self.name}'"
+        )
+
 c_1 = Contact("Dusty", "dusty@example.com")
 c_2 = Contact("Steve", "steve@itmaybeahack.com")
