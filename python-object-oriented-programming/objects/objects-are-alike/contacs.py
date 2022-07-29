@@ -25,3 +25,8 @@ class Supplier(Contact):
 
 c_1 = Contact("Dusty", "dusty@example.com")
 c_2 = Contact("Steve", "steve@itmaybeahack.com")
+
+class Friend(Contact):
+    def __init__(self, name: str, email: str, phone: str) -> None:
+        super().__init__(name, email)
+        self.phone = phone
