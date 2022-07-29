@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/monegim/Reloader/inernal/pkg/app"
+	"github.com/monegim/Reloader/internal/pkg/app"
 )
 
 func main() {

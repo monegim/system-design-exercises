@@ -1,7 +1,7 @@
 package app
 
 import (
-	"github.com/monegim/Reloader/inernal/pkg/cmd"
+	"github.com/monegim/Reloader/internal/pkg/cmd"
 )
 
 func Run() error {
