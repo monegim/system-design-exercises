@@ -8,6 +8,9 @@ import todolist
 
 class TodoListTests(unittest.TestCase):
     def setUp(self) -> None:
+        import os
+        cwd = os.getcwd()
+        print(cwd)
         with open("./testdata.json", "r") as f:
             self.testdata_text = f.read()
 
@@ -41,3 +44,6 @@ class TodoListTests(unittest.TestCase):
         self.create_todolist_and_safe_list()
         print(self.todolist)
         self.assertTrue({"id": 1, "text": "Wash the dishes"} in self.todolist)
+
+if __name__ == "__main__":
+    unittest.main()
