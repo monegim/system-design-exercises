@@ -1,9 +1,15 @@
 package metrics
 
-import "github.com/prometheus/client_golang/prometheus"
+import (
+	"net/http"
+
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/sirupsen/logrus"
+)
 
 type Collectors struct {
-	Reloader *prometheus.CounterVec
+	Reloaded *prometheus.CounterVec
 }
 
 func NewCollectors() Collectors {
@@ -19,6 +25,17 @@ func NewCollectors() Collectors {
 	reloaded.With(prometheus.Labels{"success": "true"}).Add(0)
 	reloaded.With(prometheus.Labels{"success": "false"}).Add(0)
 	return Collectors{
-		Reloader: reloaded,
+		Reloaded: reloaded,
 	}
+}
+
+func SetupPrometheusEndpoint() Collectors {
+	collectors := NewCollectors()
+	prometheus.MustRegister(collectors.Reloaded)
+
+	go func() {
+		http.Handle("/metrics", promhttp.Handler())
+		logrus.Fatal(http.ListenAndServe(":9090", nil))
+	}()
+	return collectors
 }
