@@ -20,7 +20,7 @@ func NewExampleServer(addr string) *ExampleServer {
 	}
 }
 
-func (s *ExampleServer) ListenAndServer() error {
+func (s *ExampleServer) ListenAndServe() error {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if s.isEnabled {
 			s.logger.Println("responded with OK")
