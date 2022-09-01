@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/monegim/Reloader/internal/pkg/metrics"
 	"github.com/monegim/Reloader/internal/pkg/options"
 	"github.com/monegim/Reloader/internal/pkg/util"
 	"github.com/monegim/Reloader/pkg/kube"
@@ -62,6 +63,16 @@ func startReloader(cmd *cobra.Command, args []string) {
 	ignoredNamespacesList, err := getIgnoredNamespacesList(cmd)
 	if err != nil {
 		logrus.Fatal(err)
+	}
+
+	collectors := metrics.SetupPrometheusEndpoint()
+
+	for k := range kube.ResourceMap{
+		if ignoredResourcesList.Contain(k) {
+			continue
+		}
+
+		c, err := contro
 	}
 }
 
