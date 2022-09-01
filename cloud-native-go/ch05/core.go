@@ -18,3 +18,8 @@ func Put(key string, value string) error {
 	store[key] = value
 	return nil
 }
+
+func Delete(key string) error {
+	delete(store, key)
+	return nil
+}
