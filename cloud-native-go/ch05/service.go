@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -30,9 +31,30 @@ func keyValueGetHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(value))
 	log.Printf("GET key=%s\n", key)
 }
+
+func keyValuePutHandler(w http.ResponseWriter, r *http.Request){
+	vars := mux.Vars(r)
+	key := vars["key"]
+	value, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	
+	err = Put(key, string(value))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusCreated)
+	
+	log.Printf("PUT key=%s value=%s", key, string(value))
+}
 func main() {
 	r := mux.NewRouter()
 
 	r.Use(loggingMiddleware)
 	r.HandleFunc("/v1/{key}", keyValueGetHandler).Methods("GET")
+	r.HandleFunc("/v1/{key}", keyValuePutHandler).Methods("PUT")
 }
