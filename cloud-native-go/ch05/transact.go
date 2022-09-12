@@ -28,5 +28,8 @@ type TransactionLogger struct {
 	wg           *sync.WaitGroup
 }
 
-
+func (l *TransactionLogger) WritePut(key, value string) {
+	l.wg.Add(1)
+	l.events <- Event{EventType: EventDelete, Key: key}
+}
 
