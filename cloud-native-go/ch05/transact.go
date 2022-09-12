@@ -52,3 +52,25 @@ func NewTransactionLogger(filename string) (*TransactionLogger, error) {
 	}
 	return &l, nil
 }
+
+func (l *TransactionLogger) Run() {
+	events := make(chan Event, 16)
+	l.events = events
+
+	errors := make(chan error, 1)
+	l.errors = errors
+
+	go func() {
+		for e := range events {
+			l.lastSequence++
+			_, err := fmt.Fprintf(
+				l.file,
+				"%d\t%d\t%s\t%s\n",
+				l.lastSequence, e.EventType, e.Key, e.Value)
+			if err != nil {
+				errors <- fmt.Errorf("cannot write to log file: %w", err)
+			}
+			l.wg.Done()
+		}
+	}()
+}
