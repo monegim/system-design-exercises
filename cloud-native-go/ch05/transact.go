@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"sync"
 )
@@ -40,4 +41,14 @@ func (l *TransactionLogger) WriteDelete(key string) {
 
 func (l *TransactionLogger) Err() <-chan error {
 	return l.errors
+}
+
+func NewTransactionLogger(filename string) (*TransactionLogger, error) {
+	var err error
+	var l TransactionLogger = TransactionLogger{wg: &sync.WaitGroup{}}
+	l.file, err = os.OpenFile(filename, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0755)
+	if err != nil {
+		return nil, fmt.Errorf("cannot open transaction log file: %w", err)
+	}
+	return &l, nil
 }
