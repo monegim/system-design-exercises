@@ -33,3 +33,7 @@ func (l *TransactionLogger) WritePut(key, value string) {
 	l.events <- Event{EventType: EventDelete, Key: key}
 }
 
+func (l *TransactionLogger) WriteDelete(key string) {
+	l.wg.Add(1)
+	l.events <- Event{EventType: EventDelete, Key: key}
+}
