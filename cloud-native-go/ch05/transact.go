@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"go/scanner"
+	"net/url"
 	"os"
 	"sync"
 )
@@ -86,4 +89,41 @@ func (l *TransactionLogger) Close() error {
 		close(l.events)
 	}
 	return l.file.Close()
+}
+
+func (l *TransactionLogger) ReadEvents() (<-chan Event, <-chan error) {
+	scanner := bufio.NewScanner(l.file)
+	outEvent := make(chan Event)
+	outError := make(chan error, 1)
+
+	go func() {
+		var e Event
+
+		defer close(outEvent)
+		defer close(outError)
+
+		for scanner.Scan() {
+			line := scanner.Text()
+
+			fmt.Sscanf(
+				line, "%d\t%d\t%s\t%s", &e.Sequence, &e.EventType, &e.Key, &e.Value)
+			if l.lastSequence >= e.Sequence {
+				outError <- fmt.Errorf("transaction numbers out of sequence")
+				return
+			}
+
+			uv, err := url.QueryUnescape(e.Value)
+			if err != nil {
+				outError <- fmt.Errorf("vaalue decoding failure: %w", err)
+				return
+			}
+			e.Value = uv
+			l.lastSequence = e.Sequence
+			outEvent <- e
+		}
+		if err := scanner.Err(); err != nil {
+			outError <- fmt.Errorf("transaction log read failure: %w", err)
+		}
+	}()
+	return outEvent, outError
 }
