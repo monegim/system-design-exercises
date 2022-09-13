@@ -74,3 +74,9 @@ func (l *TransactionLogger) Run() {
 		}
 	}()
 }
+
+func (l *TransactionLogger) Wait(){
+	l.wg.Wait()
+}
+
+
