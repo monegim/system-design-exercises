@@ -75,8 +75,15 @@ func (l *TransactionLogger) Run() {
 	}()
 }
 
-func (l *TransactionLogger) Wait(){
+func (l *TransactionLogger) Wait() {
 	l.wg.Wait()
 }
 
+func (l *TransactionLogger) Close() error {
+	l.wg.Wait()
 
+	if l.events != nil {
+		close(l.events)
+	}
+	return l.file.Close()
+}
