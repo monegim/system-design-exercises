@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"go/scanner"
 	"net/url"
 	"os"
 	"sync"
