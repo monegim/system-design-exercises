@@ -2,12 +2,15 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
 )
+
+var transact *TransactionLogger
 
 func loggingMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -64,10 +67,47 @@ func keyValueDeleteHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("DELETE key=%s\n", key)
 }
+
 func notAllowedHandler(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "Not Allowed", http.StatusMethodNotAllowed)
 }
+
+func initializeTransactionLog() error {
+	var err error
+
+	transact, err = NewTransactionLogger("/tmp/transaction.log")
+	if err != nil {
+		return fmt.Errorf("failed to create transaction logger: %w", err)
+	}
+	events, errors := transact.ReadEvents()
+	count, ok, e := 0, true, Event{}
+
+	for ok && err == nil {
+		select {
+		case err, ok = <-errors:
+		
+		case e, ok = <-events:
+			switch e.EventType {
+			case EventDelete:
+				err = Delete(e.Key)
+				count++
+			case EventPut:
+				err = Put(e.Key, e.Value)
+				count++
+			}
+		}
+	}
+	log.Printf("%d events replayed\n", count)
+	transact.Run()
+	return err
+}
+
 func main() {
+
+	err := initializeTransactionLog()
+	if err != nil {
+		panic(err)
+	}
 	r := mux.NewRouter()
 
 	r.Use(loggingMiddleware)
