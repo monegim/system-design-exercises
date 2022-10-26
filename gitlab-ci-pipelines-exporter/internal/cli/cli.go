@@ -9,7 +9,7 @@ import (
 )
 
 func Run(version string, args []string) {
-	err := NewApp(version, time.Now()).Run()
+	err := NewApp(version, time.Now()).Run(args)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
