@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"gitlab-ci-pipelines-exporter/internal/cmd"
 	"os"
 	"time"
 
@@ -31,7 +32,11 @@ func NewApp(version string, start time.Time) (app *cli.App) {
 		},
 	}
 	app.Commands = cli.CommandsByName{
-
+		{
+			Name: "run",
+			Usage: "start the exporter",
+			Action: cmd.ExecWrapper(cmd.Run),
+		},
 	}
 	return
 }
