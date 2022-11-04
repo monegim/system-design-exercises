@@ -1,12 +1,8 @@
 package main
 
 import (
-	"errors"
-	"fmt"
 	"log"
-	"path/filepath"
 
-	"helm.sh/helm/v3/pkg/chart"
 	"helm.sh/helm/v3/pkg/chartutil"
 )
 
