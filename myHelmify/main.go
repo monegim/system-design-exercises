@@ -1,7 +1,11 @@
 package main
 
 import (
+	"fmt"
+	"io/fs"
+	"io/ioutil"
 	"log"
+	"path/filepath"
 
 	"helm.sh/helm/v3/pkg/chartutil"
 )
@@ -28,6 +32,10 @@ func main() {
 	// }
 	name := "test1"
 	createHelmChart(name)
+	files := listDir(name)
+	for _, file := range files {
+		fmt.Println(file.Name(), file.IsDir())
+	}
 }
 
 func createHelmChart(name string) {
@@ -35,4 +43,13 @@ func createHelmChart(name string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func listDir(dir string) []fs.FileInfo {
+	abs := filepath.Join(dir, "templates")
+	files, err := ioutil.ReadDir(abs)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return files
 }
