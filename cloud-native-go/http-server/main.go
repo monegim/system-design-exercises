@@ -57,7 +57,9 @@ func getHello(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("%s: got /hello request\n", ctx.Value(keyServerAddr))
 	myName := r.PostFormValue("myName")
 	if myName == "" {
-		myName = "HTTP"
+		w.Header().Set("x-missing-field", "myName")
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 	io.WriteString(w, fmt.Sprintf("Hello, %s!\n", myName))
 }
