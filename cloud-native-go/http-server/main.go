@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net"
 	"net/http"
 )
@@ -37,10 +38,16 @@ func getRoot(w http.ResponseWriter, r *http.Request) {
 	first := r.URL.Query().Get("first")
 	hasSecond := r.URL.Query().Has("second")
 	second := r.URL.Query().Get("second")
-	fmt.Printf("%s: got / request. first(%t)=%s, second(%t)=%s\n",
+
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		fmt.Printf("could not read body: %s\n", err)
+	}
+	fmt.Printf("%s: got / request. first(%t)=%s, second(%t)=%s, body:\n%s\n",
 		ctx.Value(keyServerAddr),
 		hasFirst, first,
-		hasSecond, second)
+		hasSecond, second,
+		body)
 	io.WriteString(w, "This is my website!\n")
 }
 
